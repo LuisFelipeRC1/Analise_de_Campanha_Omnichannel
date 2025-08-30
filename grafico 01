@@ -1,0 +1,72 @@
+# ==============================================================
+# 📊 Análise Comparativa de Cobertura 4G x Presença de Fibra
+# Municípios com maior propensão de aderir ao 5G FWA
+# Gráfico 01
+# ==============================================================
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# -----------------------------
+# 1) Carregar os dados
+# -----------------------------
+caminho = '/content/a1cd9872-a59a-4024-8dcf-9b6a118f910c.xlsx'
+df = pd.read_excel(caminho)
+
+# Selecionar colunas relevantes e renomear
+df_barra = df[['Município', 'Cobertura Pop. 4G5G', 'Presença de Fibra']].copy()
+df_barra.columns = ['Municipio', 'Cobertura_4G', 'Fibra']
+
+# -----------------------------
+# 2) Filtrar municípios de interesse
+# -----------------------------
+municipios_alvo = [
+    'Divina Pastora', 'Laranjeiras', 'Japaratuba', 'Canhoba',
+    'Pacatuba', 'Itabi', 'Cumbe', 'Riachão do Dantas',
+    'Siriri', 'Pirambu'
+]
+
+df_barra = (
+    df_barra[df_barra['Municipio'].isin(municipios_alvo)]
+    .sort_values(by='Cobertura_4G', ascending=False)
+)
+
+# -----------------------------
+# 3) Construir gráfico comparativo
+# -----------------------------
+x = np.arange(len(df_barra))
+largura = 0.35
+
+plt.style.use('seaborn-v0_8')  # estilo mais elegante
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Barras lado a lado
+ax.bar(x - largura/2, df_barra['Cobertura_4G'], 
+       width=largura, label='Cobertura 4G', color='royalblue')
+ax.bar(x + largura/2, df_barra['Fibra'], 
+       width=largura, label='Presença de Fibra', color='indianred')
+
+# Configuração de eixos
+ax.set_xticks(x)
+ax.set_xticklabels(df_barra['Municipio'], rotation=45, ha='right')
+ax.set_ylim(0, 1.1)
+ax.set_ylabel('Cobertura (0 a 1)')
+ax.set_title('📶 Comparativo: Cobertura 4G x Presença de Fibra\nMunicípios com maior propensão ao 5G FWA')
+
+# Grade e legenda
+ax.legend(frameon=True, facecolor='white', edgecolor='gray')
+ax.grid(axis='y', linestyle='--', alpha=0.6)
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
