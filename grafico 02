@@ -1,0 +1,38 @@
+# ==============================================================
+# 📈 Evolução da Densidade de Telefonia Móvel – Região Nordeste
+# Gráfico 02
+# ==============================================================
+
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# 1) Dados
+# -----------------------------
+anos = ['Mai/2024', 'Abr/2025', 'Mai/2025']
+densidade = [96.53, 93.88, 94.00]
+
+# -----------------------------
+# 2) Gráfico de Linha
+# -----------------------------
+plt.style.use('seaborn-v0_8')  # estilo elegante
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+ax.plot(
+    anos, densidade,
+    marker='o', markersize=8, color='darkred',
+    linewidth=2, label='Densidade'
+)
+
+# Título e rótulos
+ax.set_title('📈 Evolução da Densidade de Telefonia Móvel\nRegião Nordeste', 
+             fontsize=14, weight='bold')
+ax.set_ylabel('Densidade (linhas móveis por 100 habitantes)')
+ax.set_xlabel('Período')
+
+# Grade e legenda
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(loc='best', frameon=True, facecolor='white', edgecolor='gray')
+
+plt.tight_layout()
+plt.show()
