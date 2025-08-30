@@ -1,0 +1,133 @@
+# ==============================================================
+# 🗺️ Mapa de Calor — Cobertura 4G/5G por Município (Sergipe)
+# ==============================================================
+# - Normaliza nomes (acentos/caixa/trim) e aplica correções de grafia
+# - Faz merge entre o shapefile e a base tabular
+# - Reprojeta para um CRS métrico (melhor centróide/label)
+# - Plota mapa coroplético com colorbar e legenda de "Sem dados"
+# - Usa representative_point() para rótulos (mais estável que centroid)
+# ==============================================================
+
+import geopandas as gpd
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import unidecode
+
+# -----------------------------
+# 1) Parâmetros / caminhos
+# -----------------------------
+CAMINHO_SHP = "/content/SE_Municipios_2024.shp"
+CAMINHO_XLSX = "/content/2547bb8b-ce34-46e4-b749-b1758aeef678.xlsx"
+COL_MUNICIPIO_SHAPE = "NM_MUN"              # nome da coluna do município no .shp
+COL_MUNICIPIO_TABELA = "Município"          # nome da coluna do município na planilha
+COL_VALOR = "Cobertura Pop. 4G5G"           # nome da métrica a mapear (0–1 ou 0–100)
+
+# Correções de grafia comuns (após normalização)
+CORRECOES = {
+    "amparo do sao francisco": "amparo de sao francisco",
+    "grancho cardoso": "gracho cardoso",
+    "graccho cardoso": "gracho cardoso",
+}
+
+# -----------------------------
+# 2) Helpers
+# -----------------------------
+def normaliza_nome(nome: str) -> str:
+    """Remove acentos, leva a minúsculas e trim."""
+    return unidecode.unidecode(str(nome)).strip().lower()
+
+def tenta_definir_crs(gdf: gpd.GeoDataFrame, crs_padrao="EPSG:4674"):
+    """
+    Garante que o GeoDataFrame tenha CRS.
+    Se estiver sem CRS, assume SIRGAS 2000 (EPSG:4674).
+    """
+    if gdf.crs is None:
+        gdf.set_crs(crs_padrao, inplace=True)
+    return gdf
+
+def formata_colorbar_percentual(cb, valores):
+    """
+    Se a coluna estiver em 0–1, formata a colorbar como porcentagem.
+    """
+    vmin, vmax = float(pd.Series(valores).min()), float(pd.Series(valores).max())
+    if vmax <= 1.1:  # heurística simples
+        cb.ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1.0))
+        cb.set_label("Cobertura Populacional 4G/5G (%)")
+    else:
+        cb.set_label("Cobertura Populacional 4G/5G")
+
+# -----------------------------
+# 3) Leitura e preparação dos dados
+# -----------------------------
+gdf = gpd.read_file(CAMINHO_SHP)
+df = pd.read_excel(CAMINHO_XLSX)
+
+# Normalização de nomes
+df["municipio_norm"] = df[COL_MUNICIPIO_TABELA].apply(normaliza_nome).replace(CORRECOES)
+gdf["municipio_norm"] = gdf[COL_MUNICIPIO_SHAPE].apply(normaliza_nome).replace(CORRECOES)
+
+# Merge espacial (via chave textual)
+gdf_merged = gdf.merge(df[["municipio_norm", COL_VALOR]], on="municipio_norm", how="left")
+
+# Garante CRS e reprojeta para UTM 24S (Sergipe) para rótulos mais estáveis
+# Fallback: mantém CRS original se reprojeção falhar
+gdf_merged = tenta_definir_crs(gdf_merged, crs_padrao="EPSG:4674")
+try:
+    gdf_plot = gdf_merged.to_crs("EPSG:31984")  # SIRGAS 2000 / UTM zone 24S
+except Exception:
+    gdf_plot = gdf_merged.copy()
+
+# Pontos de rótulo (representative_point evita labels fora do polígono)
+label_points = gdf_plot.representative_point()
+
+# -----------------------------
+# 4) Plot
+# -----------------------------
+plt.style.use('seaborn-v0_8')  # estilo elegante e consistente
+
+fig, ax = plt.subplots(1, 1, figsize=(12, 10))
+
+# Paleta contínua; você pode trocar por 'viridis', 'magma', etc.
+cmap = "plasma"
+
+# Plot coroplético
+gdf_plot.plot(
+    column=COL_VALOR,
+    cmap=cmap,
+    linewidth=0.5,
+    edgecolor="black",
+    legend=True,
+    ax=ax,
+    missing_kwds={
+        "color": "white",
+        "edgecolor": "red",
+        "hatch": "///",
+        "label": "Sem dados",
+    },
+)
+
+# Ajusta colorbar (como porcentagem se for 0–1)
+# GeoPandas retorna a colorbar via último mappable do eixo
+mappable = ax.collections[-1]
+cb = fig.colorbar(mappable, ax=ax, fraction=0.030, pad=0.02)
+formata_colorbar_percentual(cb, gdf_plot[COL_VALOR].dropna())
+
+# Rótulos dos municípios (em caixa alta, tamanho pequeno para não poluir)
+for (x, y), nome in zip(label_points.geometry.apply(lambda p: (p.x, p.y)), gdf_plot["municipio_norm"]):
+    ax.text(
+        x, y, nome.upper(),
+        fontsize=6,
+        ha="center", va="center",
+        color="black",
+        path_effects=[]  # pode aplicar contorno com matplotlib.patheffects se quiser
+    )
+
+# Título e limpeza visual
+ax.set_title(
+    "🗺️ Mapa de Calor — Cobertura 4G/5G por Município (Sergipe)",
+    fontsize=15, weight="bold"
+)
+ax.axis("off")
+plt.tight_layout()
+plt.show()
