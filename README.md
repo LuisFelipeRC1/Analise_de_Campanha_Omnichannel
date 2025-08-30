@@ -1,118 +1,85 @@
-# 📊 Campanha Omnichannel — Estágio em Dados
+# 📊 Análise de Campanha Omnichannel – Netiz  
 
-[![Made with Python](https://img.shields.io/badge/Made%20with-Python-3776AB.svg)](https://www.python.org/)
-[![Jupyter Notebook](https://img.shields.io/badge/Notebook-Jupyter-F37626.svg)](https://jupyter.org/)
-[![Status](https://img.shields.io/badge/status-completo-34D058.svg)](#)
-[![License](https://img.shields.io/badge/license-MIT-black.svg)](#-licença)
-
-Análises e protótipos para identificar **oportunidades de crescimento** em telecom a partir de dados públicos (ex.: Anatel) e benchmarks de mercado, com foco no estado de **Sergipe (BR)**. O trabalho se organiza em três frentes de insight: **(1)** potencial de **5G FWA**, **(2)** **combos fixo+móvel** e **(3)** estratégia **mobile-first** para aquisição e retenção.
+Este repositório contém um estudo aplicado sobre **estratégias de telecomunicações** com foco na operadora **Netiz**, realizado como parte de um estágio em dados. O objetivo foi identificar **oportunidades de mercado e insights estratégicos** no estado de Sergipe, a partir da análise de dados públicos da **Anatel** e outras fontes relevantes.  
 
 ---
 
-## 🔎 Sumário
+## 🔍 Objetivos do Projeto  
 
-- [Destaques](#-destaques)
-- [Estrutura do Repositório](#-estrutura-do-repositório)
-- [Materiais](#-materiais)
-- [Metodologia](#-metodologia)
-- [Principais Resultados](#-principais-resultados)
-- [Como Reproduzir](#️-como-reproduzir)
-- [Dependências](#-dependências)
-- [Como Navegar](#-como-navegar)
-- [Próximos Passos](#-próximos-passos)
-- [Licença](#-licença)
-- [Autor](#-autor)
+- Mapear **municípios estratégicos** para a implantação do **5G FWA (Fixed Wireless Access)**.  
+- Identificar **tendências de mercado** relacionadas a pacotes combinados (banda larga fixa + móvel).  
+- Avaliar o potencial de **estratégias Mobile-First** em campanhas digitais.  
 
 ---
 
-## ✨ Destaques
+## 🗂 Estrutura do Repositório  
 
-- **5G FWA em Sergipe:** priorização de municípios com **alta cobertura 4G** e **baixa presença de fibra**, maximizando viabilidade técnica e retorno sobre CAPEX.
-- **Combos Fixo + Móvel:** tendências de **migração para pós-pago** e integração de ofertas elevando **ARPU** e reduzindo **churn**.
-- **Aquisição Mobile-First:** cobertura 4G robusta viabiliza táticas de **WhatsApp, SMS e push**, acelerando ativações com CAC mais eficiente.
+📁 Analise_Campanha_Omnichannel/
+
+│── 📄 Campanha Omnichannel Luis Felipe - estágio em dados.pdf # Relatório detalhado
+
+│── 📓 Case_–_Análise_de_Campanha_Omnichannel.ipynb # Notebook com código e visualizações
+
+│── 📜 README.md 
+
 
 ---
 
-## 🗂 Estrutura do Repositório
+## 🧩 Metodologia  
 
-├── README.md
-└── Case_–_Análise_de_Campanha_Omnichannel.ipynb
-└── Campanha Omnichannel Luis Felipe - estágio em dados.pdf
----
+1. **Coleta de dados**  
+   - Painel *Meu Município* da [Anatel](https://informacoes.anatel.gov.br/paineis/meu-municipio)  
+   - Indicadores econômicos (PIB per capita)  
+   - Estudos de mercado (GSMA, JD Power, Ericsson, entre outros)  
 
-## 📁 Materiais
+2. **Tratamento e transformação**  
+   - Padronização de colunas e filtros (ex.: municípios com >85% de cobertura 4G e baixa presença de fibra).  
+   - Construção de séries temporais e gráficos comparativos para analisar tendências.  
+   - Uso de **Python (pandas, matplotlib, geopandas)** para visualização de dados.  
 
-- **Notebook principal:** `notebooks/Case_–_Análise_de_Campanha_Omnichannel.ipynb`  
-- **Relatório executivo (PDF):** `reports/Campanha Omnichannel Luis Felipe - estágio em dados.pdf`
-
----
-
-## 🧪 Metodologia
-
-1. **Coleta & Limpeza:** consolidação de indicadores de **cobertura 4G**, **presença de fibra/backhaul** e **perfil econômico** por município.
-2. **Regras de Seleção (FWA):** filtros por **cobertura 4G elevada**, **baixa penetração de fibra** e **viabilidade econômica**.
-3. **Visualização:**  
-   - **Barras** (cobertura 4G vs. fibra) por município;  
-   - **Séries temporais** (evolução pré x pós-pago);  
-   - **Mapas/heatmaps** (intensidade de cobertura 4G).
-4. **Leitura de Negócio:** priorização de praças com melhor **viabilidade técnica + econômica** e desenho de **ofertas** e **canais**.
+3. **Visualizações criadas**  
+   - 📊 Gráficos de barras (cobertura 4G vs fibra por município).  
+   - 📈 Séries temporais (densidade de linhas móveis, evolução pré-pago x pós-pago).  
+   - 🗺 Heatmap de cobertura 4G no estado de Sergipe.  
 
 ---
 
-## 📌 Principais Resultados
+## 💡 Principais Insights  
 
-- **Praças indicadas para FWA:** municípios com combinação de **cobertura móvel alta** e **fibra limitada**, sugerindo implantação ágil e boa atratividade comercial.  
-- **Tendências Comerciais:** **pós-pago em crescimento** e **queda do pré-pago** indicam espaço para **combos** e **upgrades**.  
-- **Aquisição Digital:** **campanhas mobile-first** (WhatsApp/SMS/push) com segmentações por cobertura e propensão elevam eficiência e reduzem CAC.
+- **5G FWA como alternativa competitiva**  
+  - Municípios com alta cobertura móvel e baixa infraestrutura de fibra são ideais para adoção do 5G FWA.  
+  - Payback estimado de 6 a 12 meses em cidades pequenas.  
 
-> Os detalhes e evidências (gráficos e tabelas) estão no **notebook** e no **relatório em PDF**.
+- **Pacotes combinados (fixo + móvel)**  
+  - Tendência de queda no pré-pago e crescimento no pós-pago.  
+  - Oportunidade para fidelização via combos, aumentando o LTV e reduzindo churn.  
+
+- **Estratégias Mobile-First em Sergipe**  
+  - Mais de 85% de cobertura 4G em grande parte do estado.  
+  - Campanhas digitais via WhatsApp, SMS e redes sociais têm maior potencial de alcance e conversão.  
 
 ---
 
-## ▶️️ Como Reproduzir
+## 📚 Referências  
 
-### Pré-requisitos
-- **Python 3.10+**
-- (Opcional) **conda** ou **venv** para isolar o ambiente
-- **Jupyter Lab** ou **Jupyter Notebook**
+- ANATEL – Painel “Meu Município” e relatórios setoriais  
+- [J.D. Power – ISP Satisfaction Study (2024)](https://www.jdpower.com/business/press-releases/2024-us-residential-internet-service-provider-satisfaction-study)  
+- [GSMA Intelligence – FWA Reports](https://www.gsma.com/gsmaeurope/resources/fixed-wireless-access/)  
+- [Ericsson Mobility Report 2024](https://www.ericsson.com/en/mobility-report)  
+- OpenSignal, T-Mobile, Verizon, Xplore, Jio e outros benchmarks internacionais  
 
-### Instalação
-```bash
-git clone https://github.com/<seu-usuario>/<seu-repo>.git
-cd <seu-repo>
+---
 
-# Ambiente virtual (venv)
-python -m venv .venv
-# Windows:
-# .venv\Scripts\activate
-# macOS/Linux:
-source .venv/bin/activate
+## 👨‍💻 Autor  
 
-# Dependências
-pip install -r requirements.txt
+**Luis Felipe Ramalho Carvalho**  
+📌 Estágio em Dados – Netiz  
+🔗 [LinkedIn](www.linkedin.com/in/luisfeliperamalhoc) <!-- Adicione seu perfil aqui -->  
 
-jupyter lab
-# ou:
-jupyter notebook
-# Abra: notebooks/Case_–_Análise_de_Campanha_Omnichannel.ipynb
+---
 
+✨ Este projeto une **análise de dados aplicada** e **estratégia de mercado**, mostrando como a telecomunicação pode crescer em regiões estratégicas através de soluções inovadoras.  
 
-🧭 Como Navegar
-
-FWA: células que filtram por cobertura 4G e fibra + gráficos comparativos por município.
-
-Combos fixo+móvel: análise de pré vs. pós-pago e impactos em ARPU/churn.
-
-Mobile-first: mapas/heatmaps de cobertura 4G e recomendações de canais e segmentação.
-
-📄 Licença
-
-Este projeto está licenciado sob a MIT License. Consulte o arquivo LICENSE para mais detalhes.
-
-🙋‍♂️ Autor
-
-Luis Felipe Ramalho Carvalho
-luisfeliperamalhoc@gmail.com
 
 
 
