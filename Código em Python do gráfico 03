@@ -1,0 +1,65 @@
+# ==============================================================
+# 📈 Evolução dos Acessos Móveis por Modalidade (2014–2024)
+# Gráfico 03
+# ==============================================================
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# 1) Carregar e preparar os dados
+# -----------------------------
+df = pd.read_excel("/content/8c4ccca6-fa7e-4840-b016-2047e0611982.xlsx")
+
+# Extrair ano da coluna Data
+df["Ano"] = pd.to_datetime(df["Data"]).dt.year
+
+# Filtrar apenas anos de interesse
+df_filtrado = df[df["Ano"].between(2014, 2024)]
+
+# Agrupar por ano e modalidade
+df_agrupado = (
+    df_filtrado.groupby(["Ano", "Modalidade de Cobrança"])["Acessos"]
+    .sum()
+    .reset_index()
+)
+
+# Separar séries
+anos = sorted(df_agrupado["Ano"].unique())
+pos = df_agrupado[df_agrupado["Modalidade de Cobrança"] == "Pós-pago"]["Acessos"].values
+pre = df_agrupado[df_agrupado["Modalidade de Cobrança"] == "Pré-pago"]["Acessos"].values
+
+# -----------------------------
+# 2) Gráfico de Linha
+# -----------------------------
+plt.style.use('seaborn-v0_8')  # estilo elegante
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# Série Pós-pago
+ax.plot(
+    anos, pos,
+    marker='o', markersize=7,
+    label='📈 Pós-pago (crescimento)',
+    color='royalblue', linewidth=2.5
+)
+
+# Série Pré-pago
+ax.plot(
+    anos, pre,
+    marker='o', markersize=7,
+    label='📉 Pré-pago (queda)',
+    color='indianred', linewidth=2
+)
+
+# Configurações do gráfico
+ax.set_title('📊 Evolução dos Acessos Móveis por Modalidade (2014–2024)', 
+             fontsize=14, weight='bold')
+ax.set_xlabel('Ano')
+ax.set_ylabel('Acessos Totais')
+
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(frameon=True, facecolor='white', edgecolor='gray')
+
+plt.tight_layout()
+plt.show()
